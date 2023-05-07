@@ -1,0 +1,16 @@
+{
+  "name": "appdesktop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^24.2.0",
+    "typescript": "^5.0.4"
+  }
+}
