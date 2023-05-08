@@ -4,13 +4,14 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "tsc && electron ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "electron": "^24.2.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   }
 }
