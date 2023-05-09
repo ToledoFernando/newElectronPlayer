@@ -1,13 +1,14 @@
 import { app, BrowserWindow } from "electron";
+import { getMusicFolder, getMusic } from "./event";
 import path from "path";
 
 let mainWindow: Electron.BrowserWindow | null;
 
-let isDev = false;
+let isDev = true;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 850,
+    width: 1000,
     minWidth: 850,
     height: 650,
     minHeight: 650,
@@ -16,18 +17,21 @@ function createWindow() {
     // frame: false,
     webPreferences: {
       nodeIntegration: true,
+      preload: path.join(__dirname + "/preload.js"),
     },
   });
 
   isDev
     ? mainWindow.loadURL("http://localhost:5173")
     : mainWindow.loadFile(path.join(__dirname, "client", "index.html"));
-  // mainWindow.loadFile("dist/client/index.html");
 
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
+
+getMusicFolder();
+getMusic();
 
 app.on("ready", createWindow);
 
