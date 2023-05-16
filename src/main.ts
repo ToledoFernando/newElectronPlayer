@@ -4,7 +4,7 @@ import path from "path";
 
 let mainWindow: Electron.BrowserWindow | null;
 
-let isDev = false;
+let isDev = true;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
