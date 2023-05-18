@@ -1,5 +1,10 @@
 import { app, BrowserWindow } from "electron";
-import { getMusicFolder, getMusic } from "./event";
+import {
+  getMusicFolder,
+  getMusic,
+  getMusicFolderName,
+  backToFolder,
+} from "./event";
 import path from "path";
 
 let mainWindow: Electron.BrowserWindow | null;
@@ -32,6 +37,8 @@ function createWindow() {
 
 getMusicFolder();
 getMusic();
+getMusicFolderName();
+backToFolder();
 
 app.on("ready", createWindow);
 
