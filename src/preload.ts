@@ -11,3 +11,16 @@ contextBridge.exposeInMainWorld("getMusic", async (file: IFile) => {
   const music = await ipcRenderer.invoke("getMusic", file);
   return music;
 });
+
+contextBridge.exposeInMainWorld("getMusicFolderName", async (folder: IFile) => {
+  const music = await ipcRenderer.invoke("getMusicFolderName", folder);
+  return music;
+});
+
+contextBridge.exposeInMainWorld("getBackToFolder", async (folder: string[]) => {
+  const music = await ipcRenderer.invoke(
+    "getBackToFolder",
+    folder.slice(0, -1)
+  );
+  return music;
+});
