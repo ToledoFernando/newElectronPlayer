@@ -11,12 +11,24 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/yt-search": "^2.3.2",
     "dotenv-expand": "^10.0.0",
-    "electron": "^24.2.0",
+    "electron": "^24.3.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "yt-search": "^2.10.4"
+  },
+  "build": {
+    "appId": "com.toledodev.electronplayer",
+    "mac": {
+      "icon": "./icon.png"
+    },
+    "win": {
+      "icon": "./icon.png"
+    }
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^9.0.0",
     "ytdl-core": "^4.11.4"
