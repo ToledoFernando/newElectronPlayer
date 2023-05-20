@@ -1,25 +1,18 @@
-import { ipcMain } from "electron";
+import { Notification, ipcMain } from "electron";
 import fs from "fs";
 import path from "path";
-import { IFile, IFileResult } from "./types";
-
-interface IMusics {
-  path: string;
-  name: string;
-}
-
-interface IFolders {
-  path: string;
-  name: string;
-}
+import { IFile, IFileResult, IMusicUrl, IResultSearch } from "./types";
+import yt_search from "yt-search";
+import yt_core, { videoFormat } from "ytdl-core";
+import axios from "axios";
 
 export function getMusicFolder() {
   ipcMain.handle("musicFolder", async (event) => {
     let directory = `C:\\Users\\${process.env.USERNAME}\\Music\\`;
     const result = fs.readdirSync(directory);
     //############################
-    let folders: IFolders[];
-    let mp3Files: IMusics[];
+    let folders: IFile[];
+    let mp3Files: IFile[];
 
     folders = result
       .filter((file) => {
@@ -34,7 +27,7 @@ export function getMusicFolder() {
     mp3Files = result
       .filter((filename) => path.extname(filename) === ".mp3")
       .map(
-        (filename): IMusics => ({ path: directory + filename, name: filename })
+        (filename): IFile => ({ path: directory + filename, name: filename })
       );
     //############################
     return { files: mp3Files, folders };
@@ -59,8 +52,8 @@ export function getMusicFolderName() {
     let directory = folder.path;
     const result = fs.readdirSync(directory);
     //############################
-    let folders: IFolders[];
-    let mp3Files: IMusics[];
+    let folders: IFile[];
+    let mp3Files: IFile[];
 
     folders = result
       .filter((file) => {
@@ -75,7 +68,7 @@ export function getMusicFolderName() {
     mp3Files = result
       .filter((filename) => path.extname(filename) === ".mp3")
       .map(
-        (filename): IMusics => ({
+        (filename): IFile => ({
           path: directory + "\\" + filename,
           name: filename,
         })
@@ -92,8 +85,8 @@ export function backToFolder() {
     )}`;
     const result = fs.readdirSync(directory);
     //############################
-    let folders: IFolders[];
-    let mp3Files: IMusics[];
+    let folders: IFile[];
+    let mp3Files: IFile[];
 
     folders = result
       .filter((file) => {
@@ -108,9 +101,104 @@ export function backToFolder() {
     mp3Files = result
       .filter((filename) => path.extname(filename) === ".mp3")
       .map(
-        (filename): IMusics => ({ path: directory + filename, name: filename })
+        (filename): IFile => ({ path: directory + filename, name: filename })
       );
     //############################
     return { files: mp3Files, folders };
+  });
+}
+
+export function searchMusicYT() {
+  ipcMain.handle("searchMusicYT", async (event, search: string) => {
+    const result = await yt_search(search);
+
+    const musics: IResultSearch[] = [];
+
+    for (let a = 0; a < result.videos.length; a++) {
+      musics.push({
+        videoId: result.videos[a].videoId,
+        url: result.videos[a].url,
+        title: result.videos[a].title,
+        img: result.videos[a].image,
+        thumbnail: result.videos[a].thumbnail,
+        seconds: result.videos[a].seconds,
+        views: result.videos[a].views,
+        author: result.videos[a].author.name,
+      });
+    }
+
+    return JSON.stringify(musics);
+  });
+}
+
+export function getURLMusic() {
+  ipcMain.handle("getURLMusic", async (event, videoId: string) => {
+    const url = `https://www.youtube.com/watch?v=${videoId}`;
+
+    const musicInfor = await yt_core.getInfo(url);
+    // console.log(result.videoDetails);
+
+    let musics: videoFormat[] = [];
+
+    for (let a = 0; a < musicInfor.formats.length; a++) {
+      if (
+        musicInfor.formats[a].container === "webm" &&
+        musicInfor.formats[a].hasVideo === false &&
+        musicInfor.formats[a].hasAudio === true
+      ) {
+        musics.push(musicInfor.formats[a]);
+      }
+    }
+
+    return musics[0];
+  });
+}
+
+function Download(ruta: IMusicUrl) {
+  const name = ruta.name.replace(/[^a-zA-Z0-9]/g, " ");
+  const file = fs.createWriteStream(
+    `C:\\Users\\${process.env.USERNAME}\\Music\\${name}.mp3`
+  );
+
+  axios({
+    url: ruta.url,
+    method: "GET",
+    responseType: "stream",
+  })
+    .then((response) => {
+      // const totalLength = response.headers["content-length"];
+
+      response.data.pipe(file);
+
+      // response.data.on("data", (chunk) => {
+      //   const downloaded = file.bytesWritten;
+      //   const progress = Math.round((downloaded / totalLength) * 10000) / 100;
+      //   webContents.getAllWebContents().forEach((webContent) => {
+      //     webContent.send("newProgress", progress);
+      //   });
+      // });
+
+      response.data.on("end", () => {
+        new Notification({
+          title: "Descarga Completa",
+          body: ruta.name,
+          icon: "ico/icon.png",
+        }).show();
+        console.log("Download finished");
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+export function downloadMusicURL() {
+  ipcMain.on("downloadMusicURL", (event, musica: IMusicUrl) => {
+    new Notification({
+      title: "Descargando Musica",
+      body: musica.name,
+      icon: "./icon.png",
+    }).show();
+    Download(musica);
   });
 }

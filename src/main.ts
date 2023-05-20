@@ -1,11 +1,15 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, Notification } from "electron";
 import {
   getMusicFolder,
   getMusic,
   getMusicFolderName,
   backToFolder,
+  searchMusicYT,
+  getURLMusic,
+  downloadMusicURL,
 } from "./event";
 import path from "path";
+import { IMusicUrl } from "./types";
 
 let mainWindow: Electron.BrowserWindow | null;
 
@@ -17,9 +21,9 @@ function createWindow() {
     minWidth: 850,
     height: 650,
     minHeight: 650,
-    // transparent: true,
-    // backgroundColor: "#00000000",
-    // frame: false,
+    transparent: true,
+    backgroundColor: "#00000000",
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname + "/preload.js"),
@@ -35,10 +39,15 @@ function createWindow() {
   });
 }
 
+//###################### Eventos ######################//
 getMusicFolder();
 getMusic();
 getMusicFolderName();
 backToFolder();
+searchMusicYT();
+getURLMusic();
+downloadMusicURL();
+//###################### Eventos ######################//
 
 app.on("ready", createWindow);
 
