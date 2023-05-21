@@ -1,3 +1,4 @@
+import { IpcRendererEvent } from "electron";
 import { IMusicUrl, IResultSearch } from "./types";
 import { IFile } from "./types";
 
@@ -38,4 +39,16 @@ contextBridge.exposeInMainWorld("getURLMusic", async (name: string) => {
 
 contextBridge.exposeInMainWorld("send", (event: string, musica: IMusicUrl) => {
   return ipcRenderer.send(event, musica);
+});
+
+contextBridge.exposeInMainWorld(
+  "received",
+  (event: string, callback: (...args: any[]) => void) => {
+    return ipcRenderer.on(event, callback);
+  }
+);
+
+contextBridge.exposeInMainWorld("getApiData", async () => {
+  const data = await ipcRenderer.invoke("getApiData");
+  return data;
 });
