@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Notification } from "electron";
+import { app, BrowserWindow } from "electron";
 import {
   getMusicFolder,
   getMusic,
@@ -7,9 +7,9 @@ import {
   searchMusicYT,
   getURLMusic,
   downloadMusicURL,
+  getApiData,
 } from "./event";
 import path from "path";
-import { IMusicUrl } from "./types";
 
 let mainWindow: Electron.BrowserWindow | null;
 
@@ -47,6 +47,8 @@ backToFolder();
 searchMusicYT();
 getURLMusic();
 downloadMusicURL();
+
+getApiData();
 //###################### Eventos ######################//
 
 app.on("ready", createWindow);

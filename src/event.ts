@@ -1,10 +1,11 @@
-import { Notification, ipcMain } from "electron";
+import { Notification, ipcMain, webContents } from "electron";
 import fs from "fs";
 import path from "path";
 import { IFile, IFileResult, IMusicUrl, IResultSearch } from "./types";
 import yt_search from "yt-search";
 import yt_core, { videoFormat } from "ytdl-core";
 import axios from "axios";
+import { API, TOKEN } from "./config";
 
 export function getMusicFolder() {
   ipcMain.handle("musicFolder", async (event) => {
@@ -136,7 +137,6 @@ export function getURLMusic() {
     const url = `https://www.youtube.com/watch?v=${videoId}`;
 
     const musicInfor = await yt_core.getInfo(url);
-    // console.log(result.videoDetails);
 
     let musics: videoFormat[] = [];
 
@@ -166,17 +166,17 @@ function Download(ruta: IMusicUrl) {
     responseType: "stream",
   })
     .then((response) => {
-      // const totalLength = response.headers["content-length"];
+      const totalLength = response.headers["content-length"];
 
       response.data.pipe(file);
 
-      // response.data.on("data", (chunk) => {
-      //   const downloaded = file.bytesWritten;
-      //   const progress = Math.round((downloaded / totalLength) * 10000) / 100;
-      //   webContents.getAllWebContents().forEach((webContent) => {
-      //     webContent.send("newProgress", progress);
-      //   });
-      // });
+      response.data.on("data", (chunk: Buffer | string) => {
+        const downloaded = file.bytesWritten;
+        const progress = Math.round((downloaded / totalLength) * 10000) / 100;
+        webContents.getAllWebContents().forEach((webContent) => {
+          webContent.send("newProgress", Math.round(progress));
+        });
+      });
 
       response.data.on("end", () => {
         new Notification({
@@ -200,5 +200,17 @@ export function downloadMusicURL() {
       icon: "./icon.png",
     }).show();
     Download(musica);
+  });
+}
+
+export function getApiData() {
+  ipcMain.handle("getApiData", async () => {
+    if (typeof TOKEN != "string") return;
+    const res = await axios(`${API}/music`, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return res.data;
   });
 }
