@@ -8,6 +8,7 @@ import {
   getURLMusic,
   downloadMusicURL,
   getApiData,
+  closeApp,
 } from "./event";
 import path from "path";
 
@@ -47,6 +48,7 @@ backToFolder();
 searchMusicYT();
 getURLMusic();
 downloadMusicURL();
+closeApp(app);
 
 getApiData();
 //###################### Eventos ######################//
