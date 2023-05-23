@@ -52,3 +52,8 @@ contextBridge.exposeInMainWorld("getApiData", async () => {
   const data = await ipcRenderer.invoke("getApiData");
   return data;
 });
+
+contextBridge.exposeInMainWorld("closeApp", async () => {
+  const data = await ipcRenderer.invoke("closeApp");
+  return data;
+});

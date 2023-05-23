@@ -179,6 +179,9 @@ function Download(ruta: IMusicUrl) {
       });
 
       response.data.on("end", () => {
+        webContents.getAllWebContents().forEach((webContent) => {
+          webContent.send("finishProgress", ruta.name);
+        });
         new Notification({
           title: "Descarga Completa",
           body: ruta.name,
@@ -212,5 +215,11 @@ export function getApiData() {
       },
     });
     return res.data;
+  });
+}
+
+export function closeApp(app: any) {
+  ipcMain.handle("closeApp", () => {
+    app.quit();
   });
 }
