@@ -1,6 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config();
+import * as data from "./data.json";
 
-export const TOKEN = process.env.TOKEN;
+export const TOKEN = data.TOKEN;
 
-export const API = `${process.env.API}`;
+export const API = data.API;

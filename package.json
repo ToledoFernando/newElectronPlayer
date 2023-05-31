@@ -1,35 +1,37 @@
 {
-  "name": "appdesktop",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/main.js",
+  "name": "electronplayer",
+  "version": "2.0.0",
+  "description": "New vercion Electron Player 2.0",
+  "main": "dev/main.js",
   "scripts": {
     "dev": "tsc && electron .",
-    "start": "electron ."
+    "start": "electron .",
+    "build:dev": "electron-builder --win"
   },
   "keywords": [],
-  "author": "",
+  "author": "ToledoDev",
   "license": "ISC",
   "build": {
     "appId": "com.toledodev.electronplayer",
     "mac": {
-      "icon": "./icon.png"
+      "icon": "./src/ico/icon.png"
     },
     "win": {
-      "icon": "./icon.png"
+      "icon": "./src/ico/icon.png"
     }
   },
   "dependencies": {
     "axios": "^1.4.0",
+    "ytdl-core": "^4.11.4",
+    "@types/yt-search": "^2.3.2",
     "dotenv": "^16.0.3",
-    "ytdl-core": "^4.11.4"
+    "yt-search": "^2.10.4"
   },
   "devDependencies": {
-    "@types/yt-search": "^2.3.2",
     "dotenv-expand": "^10.0.0",
     "electron": "^24.3.1",
+    "electron-builder": "^23.6.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4",
-    "yt-search": "^2.10.4"
+    "typescript": "^5.0.4"
   }
 }
