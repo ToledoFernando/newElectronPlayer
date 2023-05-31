@@ -1,4 +1,4 @@
-import { Notification, ipcMain, webContents } from "electron";
+import { Notification, ipcMain, shell, webContents } from "electron";
 import fs from "fs";
 import path from "path";
 import { IFile, IFileResult, IMusicUrl, IResultSearch } from "./types";
@@ -185,7 +185,7 @@ function Download(ruta: IMusicUrl) {
         new Notification({
           title: "Descarga Completa",
           body: ruta.name,
-          icon: "ico/icon.png",
+          icon: path.join(__dirname, "ico", "icon.png"),
         }).show();
         console.log("Download finished");
       });
@@ -200,7 +200,7 @@ export function downloadMusicURL() {
     new Notification({
       title: "Descargando Musica",
       body: musica.name,
-      icon: "./icon.png",
+      icon: path.join(__dirname, "ico", "icon.png"),
     }).show();
     Download(musica);
   });
@@ -215,6 +215,86 @@ export function getApiData() {
       },
     });
     return res.data;
+  });
+}
+
+export function getMusicYTDL() {
+  ipcMain.handle("getMusicYTDL", async (event, videoURL: string) => {
+    const musicInfor = await yt_core.getInfo(videoURL);
+    let musics: videoFormat[] = [];
+
+    for (let a = 0; a < musicInfor.formats.length; a++) {
+      if (
+        musicInfor.formats[a].container === "webm" &&
+        musicInfor.formats[a].hasVideo === false &&
+        musicInfor.formats[a].hasAudio === true
+      ) {
+        musics.push(musicInfor.formats[a]);
+      }
+    }
+
+    return musics[0];
+  });
+}
+
+export function getAllPlayList() {
+  ipcMain.handle("getAllPlayList", async (event) => {
+    if (typeof TOKEN != "string") return;
+    const res = await axios(`${API}/playlist/get-allplaylist`, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return res.data;
+  });
+}
+
+export function getMusicByPlayList() {
+  ipcMain.handle("getMusicByPlayList", async (event, playlistID: string) => {
+    if (typeof TOKEN != "string") return;
+    const res = await axios(`${API}/playlist/byplaylist/${playlistID}`, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return res.data;
+  });
+}
+
+export function sendNewProblemsADM() {
+  ipcMain.handle(
+    "sendNewProblemsADM",
+    async (
+      event,
+      {
+        musicID,
+        title,
+        detalle,
+      }: { musicID: string; title: string; detalle: string }
+    ) => {
+      if (typeof TOKEN != "string") return;
+      const res = await axios.post(
+        `${API}/email/new-problem`,
+        {
+          musicID,
+          title,
+          detalle,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        }
+      );
+      return res.data;
+    }
+  );
+}
+
+export function openWebOficial() {
+  ipcMain.handle("openWebOficial", (event) => {
+    shell.openExternal("https://electronplayer.online");
+    return;
   });
 }
 

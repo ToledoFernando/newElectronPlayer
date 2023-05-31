@@ -1,5 +1,4 @@
-import { IpcRendererEvent } from "electron";
-import { IMusicUrl, IResultSearch } from "./types";
+import { IMusicUrl } from "./types";
 import { IFile } from "./types";
 
 const { contextBridge, ipcRenderer } = require("electron");
@@ -51,6 +50,53 @@ contextBridge.exposeInMainWorld(
 contextBridge.exposeInMainWorld("getApiData", async () => {
   const data = await ipcRenderer.invoke("getApiData");
   return data;
+});
+
+contextBridge.exposeInMainWorld("getMusicYTDL", async (videoURL: string) => {
+  const data = await ipcRenderer.invoke("getMusicYTDL", videoURL);
+  return data;
+});
+
+contextBridge.exposeInMainWorld("getAllPlayList", async () => {
+  const data = await ipcRenderer.invoke("getAllPlayList");
+  return data;
+});
+
+contextBridge.exposeInMainWorld(
+  "getMusicByPlayList",
+  async (playListID: string) => {
+    const data = await ipcRenderer.invoke("getMusicByPlayList", playListID);
+    return data;
+  }
+);
+
+contextBridge.exposeInMainWorld("hide", async () => {
+  await ipcRenderer.invoke("hide");
+});
+
+contextBridge.exposeInMainWorld(
+  "sendNewProblemsADM",
+  async ({
+    musicID,
+    title,
+    detalle,
+  }: {
+    musicID: string;
+    title: string;
+    detalle: string;
+  }) => {
+    const result = await ipcRenderer.invoke("sendNewProblemsADM", {
+      musicID,
+      title,
+      detalle,
+    });
+    console.log(result);
+  }
+);
+
+contextBridge.exposeInMainWorld("openWebOficial", async () => {
+  await ipcRenderer.invoke("openWebOficial");
+  return;
 });
 
 contextBridge.exposeInMainWorld("closeApp", async () => {
