@@ -1,7 +1,13 @@
 import { Notification, ipcMain, shell, webContents } from "electron";
 import fs from "fs";
 import path from "path";
-import { IFile, IFileResult, IMusicUrl, IResultSearch } from "./types";
+import {
+  IFile,
+  IFileResult,
+  IMusicUrl,
+  IResultSearch,
+  ISearchAPI,
+} from "./types";
 import yt_search from "yt-search";
 import yt_core, { videoFormat } from "ytdl-core";
 import axios from "axios";
@@ -295,6 +301,58 @@ export function openWebOficial() {
   ipcMain.handle("openWebOficial", (event) => {
     shell.openExternal("https://electronplayer.online");
     return;
+  });
+}
+
+export function getGenerosAPI() {
+  ipcMain.handle("getGenerosAPI", async (event) => {
+    const { data } = await axios(API + "/generos/", {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return data;
+  });
+}
+
+export function searchMusicAPI() {
+  ipcMain.handle("searchMusicAPI", async (event, dataSearch: ISearchAPI) => {
+    const { data } = await axios.post(API + "/music/search", dataSearch, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return data;
+  });
+}
+
+export function searchMusicByGener() {
+  ipcMain.handle("searchMusicByGener", async (event, gener: string) => {
+    const { data } = await axios.post(
+      API + "/music/getmusicgener",
+      { id: gener },
+      {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      }
+    );
+    return data;
+  });
+}
+
+export function getPlayListByName() {
+  ipcMain.handle("getPlayListsByName", async (event, name: string) => {
+    const { data } = await axios.post(
+      API + "/playlist/getplaylist-name",
+      { name },
+      {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      }
+    );
+    return data;
   });
 }
 
