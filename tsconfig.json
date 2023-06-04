@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "commonjs",
-    "outDir": "./dev",
+    "outDir": "testDev",
     "rootDir": "./src",
     "resolveJsonModule": true,
     "strict": true,

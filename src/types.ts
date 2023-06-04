@@ -3,6 +3,11 @@ export interface IFile {
   path: string;
 }
 
+export interface ISearchAPI {
+  name: string;
+  genero: string;
+}
+
 export interface IFileResult {
   name: string;
   buffer: Buffer | ArrayBuffer | null;

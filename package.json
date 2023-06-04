@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsc && electron .",
     "start": "electron .",
-    "build:dev": "electron-builder --win"
+    "build": "electron-builder --win"
   },
   "keywords": [],
   "author": "ToledoDev",

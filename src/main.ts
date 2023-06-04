@@ -22,6 +22,10 @@ import {
   getMusicByPlayList,
   sendNewProblemsADM,
   openWebOficial,
+  getGenerosAPI,
+  searchMusicAPI,
+  searchMusicByGener,
+  getPlayListByName,
 } from "./event";
 import path from "path";
 
@@ -94,10 +98,14 @@ backToFolder();
 searchMusicYT();
 getURLMusic();
 downloadMusicURL();
+getGenerosAPI();
 getMusicYTDL();
 sendNewProblemsADM();
 openWebOficial();
+searchMusicAPI();
 getMusicByPlayList();
+searchMusicByGener();
+getPlayListByName();
 getAllPlayList();
 closeApp(app);
 

@@ -1,4 +1,4 @@
-import { IMusicUrl } from "./types";
+import { IMusicUrl, ISearchAPI } from "./types";
 import { IFile } from "./types";
 
 const { contextBridge, ipcRenderer } = require("electron");
@@ -69,6 +69,29 @@ contextBridge.exposeInMainWorld(
     return data;
   }
 );
+
+contextBridge.exposeInMainWorld("getGenerosAPI", async () => {
+  const data = await ipcRenderer.invoke("getGenerosAPI");
+  return data;
+});
+
+contextBridge.exposeInMainWorld(
+  "searchMusicAPI",
+  async (dataSearch: ISearchAPI) => {
+    const data = await ipcRenderer.invoke("searchMusicAPI", dataSearch);
+    return data;
+  }
+);
+
+contextBridge.exposeInMainWorld("searchMusicByGener", async (gener: string) => {
+  const data = await ipcRenderer.invoke("searchMusicByGener", gener);
+  return data;
+});
+
+contextBridge.exposeInMainWorld("getPlayListsByName", async (name: string) => {
+  const data = await ipcRenderer.invoke("getPlayListsByName", name);
+  return data;
+});
 
 contextBridge.exposeInMainWorld("hide", async () => {
   await ipcRenderer.invoke("hide");
