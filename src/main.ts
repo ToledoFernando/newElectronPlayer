@@ -35,7 +35,7 @@ let tray;
 
 let hide;
 
-let isDev = false;
+let isDev = true;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
