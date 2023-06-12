@@ -2,7 +2,7 @@
   "name": "electronplayer",
   "version": "2.0.0",
   "description": "New vercion Electron Player 2.0",
-  "main": "dev/main.js",
+  "main": "testDev/main.js",
   "scripts": {
     "dev": "tsc && electron .",
     "start": "electron .",
