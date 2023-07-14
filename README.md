@@ -1,5 +1,5 @@
 # newElectronPlayer
 
-[Cliente - React + Typescript]([https://github.com/ToledoFernando/newElectronPlayer)
+[Cliente - React + Typescript](https://github.com/ToledoFernando/newElectronPlayer)
 
-[Websetire](https://electronplayer.online/)
+[Website](https://electronplayer.online/)
